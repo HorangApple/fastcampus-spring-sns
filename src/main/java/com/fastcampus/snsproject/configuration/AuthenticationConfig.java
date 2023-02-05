@@ -2,6 +2,8 @@ package com.fastcampus.snsproject.configuration;
 
 //import com.fastcampus.snsproject.configuration.filter.JwtTokenFilter;
 //import com.fastcampus.snsproject.exception.CustumAuthenticationEntryPoint;
+import com.fastcampus.snsproject.configuration.filter.JwtTokenFilter;
+import com.fastcampus.snsproject.exception.CustomAuthenticationEntryPoint;
 import com.fastcampus.snsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +26,6 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        //super.configure(web);
         web.ignoring().regexMatchers("^(?!/api/).*");
     }
 
@@ -36,11 +37,11 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").authenticated()
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//                .and()
-//                .addFilterBefore(new JwtTokenFilter(key, userService), UsernamePasswordAuthenticationFilter.class)
-//                .exceptionHandling()
-//                .authenticationEntryPoint(new CustumAuthenticationEntryPoint());
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(new JwtTokenFilter(key, userService), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
     }
 
 }
